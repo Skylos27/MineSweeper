@@ -1,5 +1,6 @@
 package com.example.minesweeper;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,7 +14,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
 
 public class MineView extends View {
     public static Button btn_reset;
@@ -46,9 +50,6 @@ public class MineView extends View {
     private int ytouch;
     public static boolean touched =false;
 
-
-
-
     public MineView(Context context) {
         super(context);
         init(null, 0);
@@ -75,6 +76,17 @@ public class MineView extends View {
     private void invalidateTextPaintAndMeasurements() {
 
     }//invalidateTextPaintAndMeasurements()
+    public static void retry(){
+        isbomb = new boolean[10][10];
+        isCovered = new boolean[10][10];
+        neighbors = new int[10][10];
+        isFlag = new boolean[10][10];
+        start = true;
+        flagon = false;
+        isLose = false;
+        isWin=false;
+        flagPut = 0;
+    }
 
     private OnTouchListener handleTouch= new OnTouchListener() {
 
@@ -89,24 +101,44 @@ public class MineView extends View {
             //Bounds of squares to be drawn.
             int rectBounds = contentWidth / 10;
 
-            if(event.getAction() == MotionEvent.ACTION_DOWN ){
+            if(event.getAction() == MotionEvent.ACTION_DOWN && !isLose){
                 xtouch = x / rectBounds;
                 ytouch = y / rectBounds;
 
-                if(ytouch<10 && xtouch<10 ) {
+                if(ytouch<10 && xtouch<10 && flagon == false){
+                    if(isFlag[xtouch][ytouch] == false){
                         isCovered[xtouch][ytouch] = false;
+                        if (isbomb[xtouch][ytouch] == true)isLose = true;}
+                }
+                if(ytouch<10 && xtouch<10 && flagon == true){
+                    if (isCovered[xtouch][ytouch]){
+                        if(isFlag[xtouch][ytouch] == true)
+                            isFlag[xtouch][ytouch] = false;
+                        else isFlag[xtouch][ytouch] = true;
+                    }
                 }
                 touched = true;
-                Log.i("TAG", "touched down on " + x / rectBounds + ", " + y / rectBounds);
+                Log.i("TAG", "touched down on " + x / rectBounds + ", " + y / rectBounds+ " flagon = "+flagon + " is lose :" +isLose);
 
 
                 invalidate();
             }
-
+            flagPut=0;
+            remainingMines = 20;
+            for(int i = 0;i<10;i++){
+                for(int j = 0;j<10;j++){
+                    if(isFlag[i][j]) {
+                        flagPut +=1;
+                    }
+                    if(isFlag[i][j] && isbomb[i][j]) remainingMines--;
+                }
+            }
+            stringFlag = "Flag : "+ flagPut;
 
             return true;
         }
     };
+
 
 
     @Override
@@ -147,7 +179,7 @@ public class MineView extends View {
         //Create a rect which is actually a square.
         square = new Rect(10,10, sideLength, sideLength);
 
-
+        // On Start
         if(start){
             for(int i=0; i<10; i++) {
                 for (int j = 0; j < 10; j++) {
@@ -186,8 +218,12 @@ public class MineView extends View {
             }
             start = false;
         }
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
+
+
+        //Draw a row of squares.
+
+        for(int i=0; i<10; i++){
+            for(int j=0; j<10; j++) {
 
                 //Preliminary save of the drawing origin to the stack.
                 canvas.save();
@@ -202,23 +238,9 @@ public class MineView extends View {
 
             }// for j
         }//for i
-
-        if(touched) {
-            for (int i = 0; i < 10; i++) {
-                for (int j = 0; j < 10; j++) {
-
-                    if (isCovered[i][j] == true) {
-                        //Preliminary save of the drawing origin to the stack.
-                        canvas.save();
-
-                        //Translate to draw a row of squares. First will be at (0,0).
-                        canvas.translate(i * rectBounds, j * rectBounds);
-                        //Draw it.
-                        canvas.drawRect(square, rectPaint);
-
-                        //Restore. Back to the origin.
-                        canvas.restore();
-                    }
+        if(touched){
+            for(int i =0; i < 10; i++) {
+                for (int j=0;j<10;j++) {
                     if (isCovered[i][j] == false && isFlag[i][j] == false ) {
 
                         //Preliminary save of the drawing origin to the stack.
@@ -232,7 +254,31 @@ public class MineView extends View {
                         //Restore. Back to the origin.
                         canvas.restore();
                     }
-                    if (!isCovered[i][j] && isbomb[i][j] ) {
+                    else if (isCovered[i][j] == true && isFlag[i][j] == false) {
+                        //Preliminary save of the drawing origin to the stack.
+                        canvas.save();
+
+                        //Translate to draw a row of squares. First will be at (0,0).
+                        canvas.translate(i * rectBounds, j * rectBounds);
+                        //Draw it.
+                        canvas.drawRect(square, rectPaint);
+
+                        //Restore. Back to the origin.
+                        canvas.restore();
+                    }
+                    else if (isCovered[i][j] && isFlag[i][j]) {
+                        //Preliminary save of the drawing origin to the stack.
+                        canvas.save();
+
+                        //Translate to draw a row of squares. First will be at (0,0).
+                        canvas.translate(i * rectBounds, j * rectBounds);
+                        //Draw it.
+                        canvas.drawRect(square, flagPaint);
+
+                        //Restore. Back to the origin.
+                        canvas.restore();
+                    }
+                    if (!isCovered[i][j] && !isFlag[i][j]  && isbomb[i][j] ) {
                         //Preliminary save of the drawing origin to the stack.
                         canvas.save();
 
@@ -247,11 +293,16 @@ public class MineView extends View {
                         canvas.restore();
 
                     }
+
                 }
             }
-            touched=false;
-        }
+            touched = false;
+        }//for i
+
         setOnTouchListener(handleTouch);
 
-    }
-}
+
+    }//onDraw()
+
+}//class
+
