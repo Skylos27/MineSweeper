@@ -125,10 +125,16 @@ public class MineView extends View {
         int contentHeight = getHeight() - paddingTop - paddingBottom;
 
         //Bounds of squares to be drawn.
-        int rectBounds = contentWidth / 10;
+        int rectBounds = contentWidth/10;
 
         //Side length of the square.
-        int sideLength = rectBounds - 10;
+        int sideLength = rectBounds -10 ;
+
+        Mine = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
+        Mine.setColor(Color.BLACK);
+        Mine.setTextSize(100);
+
+
         //Paint instance for drawing the squares.
         rectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         rectPaint.setColor(Color.BLACK);
@@ -139,7 +145,7 @@ public class MineView extends View {
         flagPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         flagPaint.setColor(Color.YELLOW);
         //Create a rect which is actually a square.
-        square = new Rect(10, 10, sideLength, sideLength);
+        square = new Rect(10,10, sideLength, sideLength);
 
 
         if(start){
@@ -155,7 +161,29 @@ public class MineView extends View {
                     canvas.restore();
                 }
             }
+            for(int k=0; k<20; k++) {
+                Random rand = new Random();
+                int rand1 = rand.nextInt(9);
+                int rand2 = rand.nextInt(9);
+                if(isbomb[rand1][rand2] == false) isbomb[rand1][rand2] = true;
+                else k --;
+            }
+            for(int i=0; i<10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    if (isbomb[i][j] == true){
+                        if(i-1>=0 && j-1>=0) neighbors[i-1][j-1]+=1;
+                        if(i>=0 && j-1>=0) neighbors[i][j-1]+=1;
+                        if(i+1<=9 && j-1>=0) neighbors[i+1][j-1]+=1;
+                        if(i+1<=9 && j>=0) neighbors[i+1][j]+=1;
+                        if(i+1<=9 && j+1<=9) neighbors[i+1][j+1]+=1;
+                        if(i<=9 && j+1<=9) neighbors[i][j+1]+=1;
+                        if(i-1>=0 && j+1<=9) neighbors[i-1][j+1]+=1;
+                        if(i-1>=0 && j+1<=9) neighbors[i-1][j]+=1;
 
+                    }
+
+                }
+            }
             start = false;
         }
         for (int i = 0; i < 10; i++) {
@@ -191,7 +219,7 @@ public class MineView extends View {
                         //Restore. Back to the origin.
                         canvas.restore();
                     }
-                    if (isCovered[i][j] == false) {
+                    if (isCovered[i][j] == false && isFlag[i][j] == false ) {
 
                         //Preliminary save of the drawing origin to the stack.
                         canvas.save();
@@ -199,8 +227,25 @@ public class MineView extends View {
                         canvas.translate(i * rectBounds, j * rectBounds);
                         //Draw it.
                         canvas.drawRect(square, touchedPaint);
+                        String neigh = String.valueOf(neighbors[i][j]);
+                        canvas.drawText(neigh, 25, sideLength - 5, Mine);
                         //Restore. Back to the origin.
                         canvas.restore();
+                    }
+                    if (!isCovered[i][j] && isbomb[i][j] ) {
+                        //Preliminary save of the drawing origin to the stack.
+                        canvas.save();
+
+                        //Translate to draw a row of squares. First will be at (0,0).
+                        canvas.translate(i * rectBounds, j * rectBounds);
+                        //Draw it.
+                        canvas.drawRect(square, bombPaint);
+                        canvas.drawText("M", 9, sideLength - 5, Mine);
+
+
+                        //Restore. Back to the origin.
+                        canvas.restore();
+
                     }
                 }
             }
