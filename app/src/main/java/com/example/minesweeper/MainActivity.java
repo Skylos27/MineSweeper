@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        TextView isLose = findViewById(R.id.youlost);
 
         //setContentView(new MineView(this));
         TextView upFlag = findViewById(R.id.Flags);
@@ -40,10 +41,14 @@ public class MainActivity extends AppCompatActivity {
             if (MineView.flagon == true) {
                 MineView.flagon = false;
                 MineView.flag.setBackgroundColor(0x6200EE);
+                upFlag.setText(MineView.stringFlag);
+                upMines.setText("Bomb remaining : " +MineView.remainingMines);
             }
             else {
                 MineView.flagon = true;
                 MineView.flag.setBackgroundColor(Color.YELLOW);
+                upFlag.setText(MineView.stringFlag);
+                upMines.setText("Bomb remaining : " +MineView.remainingMines);
             }}
         });
 
