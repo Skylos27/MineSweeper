@@ -86,6 +86,7 @@ public class MineView extends View {
         isLose = false;
         isWin=false;
         flagPut = 0;
+        remainingMines = 20;
     }
 
     private OnTouchListener handleTouch= new OnTouchListener() {

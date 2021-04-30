@@ -31,7 +31,11 @@ public class MainActivity extends AppCompatActivity {
             MineView.start = true;
 
             MineView.flag.setBackgroundColor(0x6200EE);
-            MineView.retry();}
+            MineView.retry();
+
+            upFlag.setText("Flag : 0");
+            upMines.setText("Bomb remaining : 20");
+        }
         });
 
         MineView.flag = (Button) findViewById(R.id.flagbutton);
