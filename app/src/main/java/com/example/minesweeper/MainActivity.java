@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         TextView youLost = findViewById(R.id.youLost);
         TextView upMines = findViewById(R.id.remainMines);
         MineView.btn_reset = (Button) findViewById(R.id.resetbutton);
+        // Listen the reset button
         MineView.btn_reset.setOnClickListener(arg0 -> {
             MineView.start = true;
 
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         MineView.flag = (Button) findViewById(R.id.flagbutton);
+        // Listen the Flag Button
         MineView.flag.setOnClickListener(arg0 -> {
             if (MineView.flagon == true) {
                 MineView.flagon = false;
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 MineView.flagon = true;
                 MineView.flag.setBackgroundColor(Color.YELLOW);
             }});
+        // Update the texts fields every 0.5 second
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 upMines.setText("Bomb on field : " + MineView.remainingMines);
 
             }
-        }, 0, 200);
+        }, 0, 500);
 
 
     }

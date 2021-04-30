@@ -76,6 +76,8 @@ public class MineView extends View {
     private void invalidateTextPaintAndMeasurements() {
 
     }//invalidateTextPaintAndMeasurements()
+
+    // Function that reset the variable to their initial values
     public static void retry(){
         isbomb = new boolean[10][10];
         isCovered = new boolean[10][10];
@@ -90,6 +92,7 @@ public class MineView extends View {
 
     }
 
+    // Listen every touch on the screen
     private OnTouchListener handleTouch= new OnTouchListener() {
 
         @Override
@@ -107,6 +110,7 @@ public class MineView extends View {
                 xtouch = x / rectBounds;
                 ytouch = y / rectBounds;
 
+                // Below 10 to keep drawing on the board
                 if(ytouch<10 && xtouch<10 && flagon == false){
                     if(isFlag[xtouch][ytouch] == false){
                         isCovered[xtouch][ytouch] = false;
@@ -126,7 +130,7 @@ public class MineView extends View {
                 invalidate();
             }
             flagPut=0;
-            remainingMines = 20;
+            // update the number of flags
             for(int i = 0;i<10;i++){
                 for(int j = 0;j<10;j++){
                     if(isFlag[i][j]) {
@@ -195,13 +199,15 @@ public class MineView extends View {
                     canvas.restore();
                 }
             }
-            for(int k=0; k<20; k++) {
+            // Putting bomb randomly
+            for(int k=0; k<remainingMines; k++) {
                 Random rand = new Random();
                 int rand1 = rand.nextInt(9);
                 int rand2 = rand.nextInt(9);
                 if(isbomb[rand1][rand2] == false) isbomb[rand1][rand2] = true;
                 else k --;
             }
+            // counting the number of bombs around each cell
             for(int i=0; i<10; i++) {
                 for (int j = 0; j < 10; j++) {
                     if (isbomb[i][j] == true){
@@ -222,7 +228,7 @@ public class MineView extends View {
         }
 
 
-        //Draw a row of squares.
+        //the board
 
         for(int i=0; i<10; i++){
             for(int j=0; j<10; j++) {
@@ -240,6 +246,7 @@ public class MineView extends View {
 
             }// for j
         }//for i
+        // Updating after each touch
         if(touched){
             for(int i =0; i < 10; i++) {
                 for (int j=0;j<10;j++) {
