@@ -114,9 +114,9 @@ public class MineView extends View {
                 }
                 if(ytouch<10 && xtouch<10 && flagon == true){
                     if (isCovered[xtouch][ytouch]){
-                        if(isFlag[xtouch][ytouch] == true)
+                        if(isFlag[xtouch][ytouch] )
                             isFlag[xtouch][ytouch] = false;
-                        else isFlag[xtouch][ytouch] = true;
+                        else if (!isFlag[xtouch][ytouch] && flagPut <20 )isFlag[xtouch][ytouch] = true;
                     }
                 }
                 touched = true;
@@ -132,7 +132,7 @@ public class MineView extends View {
                     if(isFlag[i][j]) {
                         flagPut +=1;
                     }
-                    if(isFlag[i][j] && isbomb[i][j]) remainingMines--;
+
                 }
             }
             stringFlag = "Flag : "+ flagPut;
