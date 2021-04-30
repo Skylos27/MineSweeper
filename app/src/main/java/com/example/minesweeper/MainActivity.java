@@ -21,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        TextView isLose = findViewById(R.id.youlost);
 
         //setContentView(new MineView(this));
         TextView upFlag = findViewById(R.id.Flags);
