@@ -12,7 +12,32 @@
     <com.example.minesweeper.MineView
         android:id="@+id/board"
         android:layout_width="match_parent"
-        android:layout_height="434dp" />
+        android:layout_height="434dp"></com.example.minesweeper.MineView>
+        <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/youWon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+
+            android:textColor="#44FF00"
+            android:textSize="50sp" />
+            <TextView
+                android:id="@+id/youLost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:textColor="#F00"
+                android:textSize="50sp" />
+
+    </RelativeLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -69,6 +94,9 @@
             android:backgroundTint="@color/purple_500"
             android:text="Reset" />
     </LinearLayout>
+
+
+
 
 
 </LinearLayout>

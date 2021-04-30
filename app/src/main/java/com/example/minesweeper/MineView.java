@@ -25,11 +25,11 @@ public class MineView extends View {
     public static TextView flags;
 
     public static boolean isLose = false;
-    public static boolean isWin =false;
+    public static boolean isWin = false;
     public static String stringFlag ="Flag : 0";
 
     public static int flagPut;
-    public static int remainingMines;
+    public static int remainingMines =20;
     private Paint rectPaint;
     private Paint touchedPaint;
     private Paint bombPaint;
@@ -87,6 +87,7 @@ public class MineView extends View {
         isWin=false;
         flagPut = 0;
         remainingMines = 20;
+
     }
 
     private OnTouchListener handleTouch= new OnTouchListener() {
